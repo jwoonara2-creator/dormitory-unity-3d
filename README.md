@@ -184,30 +184,6 @@ python tools/serve_nocache.py <WebGL 빌드 폴더> 8093
 
 ---
 
-## 7. 만들면서 알게 된 점 (WebGL)
-
-| 문제 | 원인 | 해결 |
-|---|---|---|
-| 한글이 빈칸으로 나옴 | WebGL에는 OS 글꼴이 없음 | `Resources/KoreanFont`(Noto Sans KR, SIL OFL)를 번들, `UiUtil.CreateKoreanFont`·`AppUiFixes`가 먼저 사용 |
-| Main 사진 카드가 잘림 | 캔버스가 "Constant Pixel Size"(1440×2560 폰 기준) | `MainScreenFit`으로 "Scale With Screen Size" 적용 |
-| 방 화면에 뒤로가기 버튼이 없음 | 버튼이 다른 캔버스 아래에 숨거나 크기가 달랐음 | **자기 캔버스 + SafeArea**를 가진 버튼을 코드로 생성(`AppUiFixes.CreateBackButton`) |
-| 시설 제목이 너무 큼 | 제목 알약이 2배 크기 + 고정 픽셀 캔버스 | `FacilityTitleFit`으로 침실과 같은 설정 |
-| "Unknown data format" | 서버 두 개가 같은 포트를 나눠 씀 + 브라우저가 옛 `index.html`을 캐시 | `serve_nocache.py` |
-| 빌드가 큼 | 텍스처·조명 | `WebGLTextureOptimizer`, 압축 Disabled + 호스팅 압축 (현재 빌드: 압축 전 약 80MB, zip 약 48MB) |
-| 버튼이 글자 박스라 딱딱함 | 텍스트 박스 UI | 동그란 아이콘 버튼으로 교체(`UiIcons`) |
-
----
-
-## 8. 알려진 한계 · 남은 일
-
-- 휴대폰 **실기기(WebView)** 에서 충분히 확인하지 못했습니다.
-- `hotspot:<id>` 메시지의 id 목록이 정해지지 않았습니다(Unity·앱 팀 합의 필요).
-- `show_floor:<n>`은 아직 층 구분 없이 같은 `FloorView`를 엽니다.
-- `GymCamera.cs`는 내용이 없는 빈 스크립트입니다.
-- `HoldButtonController.cs` 등 일부 원본 스크립트는 한글 주석이 CP949로 저장돼 있어, 이 저장소에는 **UTF-8로 변환해** 담았습니다(코드 동작은 같음).
-
----
-
 ## 이 저장소에 없는 것
 
 - 3D 모델 · 텍스처 · 머티리얼 · 씬(`.unity`) · 프리팹 → 전체 Unity 프로젝트에 있습니다(약 630MB, `Library` 제외 압축).
