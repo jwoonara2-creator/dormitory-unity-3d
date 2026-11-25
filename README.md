@@ -98,9 +98,8 @@ dormitory-unity-3d/
 │  ├─ Scripts/               실행 중에 쓰이는 C# (Assets/Scripts)
 │  │  └─ AppBridge/          앱 연결·UI 보정·아이콘·위에서 보기·입장 안내
 │  ├─ Editor/                빌드 스크립트·화면 맞춤 도구·씬/프리팹 생성기 (Assets/Editor)
-│  └─ WebGL/
-│     ├─ Plugins/AppBridge.jslib                    C# → 웹 페이지
-│     └─ WebGLTemplates/AppEmbed/index.html         Unity 로딩 + 앱 메시지 중계 페이지
+│  ├─ Plugins/WebGL/AppBridge.jslib               C# → 웹 페이지
+│  └─ WebGLTemplates/AppEmbed/index.html          Unity 로딩 + 앱 메시지 중계 페이지
 └─ tools/
    └─ serve_nocache.py       로컬 테스트용 정적 서버(캐시 끔)
 ```
@@ -136,6 +135,7 @@ dormitory-unity-3d/
 | [`SafeAreaFitter.cs`](src/Scripts/SafeAreaFitter.cs) | 노치·시스템 바를 피해 UI 영역 맞추기 |
 | [`KoreanFont.cs`](src/Scripts/KoreanFont.cs) | 캔버스 아래 `Text`를 한글 글꼴로 교체 |
 | `HoldButtonController.cs` · `CarMove.cs` · `CloudSpawner.cs` · `CloudMover.cs` | Main 지도의 눌림 효과와 장식(자동차·구름) |
+| `GymCamera.cs` | 내용이 없는 빈 스크립트(미사용) |
 
 ### 에디터 도구 (`src/Editor`)
 
@@ -150,6 +150,17 @@ dormitory-unity-3d/
 | Shrink textures for WebGL | `WebGLTextureOptimizer.cs` | WebGL 전용 텍스처 축소(PC/Android 설정은 그대로) |
 
 그 밖에 방·화장실·복도·휴게실·층 단면을 **코드로 생성**하는 빌더(`*Builder.cs`, `NavBuilder.cs`, `RebuildAll.cs`)와 씬 점검 도구(`SceneAudit.cs`: 면 겹침·가구 관통·누락 메시 검사)가 있습니다.
+
+이 둘은 메뉴에 없고 명령줄로 실행합니다.
+
+```
+Unity -batchmode -quit -projectPath <프로젝트 경로> -executeMethod RebuildAll.Run
+Unity -batchmode -quit -projectPath <프로젝트 경로> -executeMethod SceneAudit.Run -captureDir <결과 폴더>
+```
+
+> `NavBuilder`를 단독으로 실행하면 `RegisterScenes()`가 빌드 씬 목록을 흐름 씬 7개로 덮어써서 `Main`이 빠집니다. WebGL 빌드는 `WebGLBuild`가 목록을 다시 설정하므로 영향이 없습니다.
+
+보조 파일: `DeskCleanup.cs`, `LightTuning.cs`, `MeshStore.cs`
 
 ---
 
@@ -166,7 +177,7 @@ dormitory-unity-3d/
 3. 빌드 설정(코드 `WebGLBuild.cs`에 들어 있음): 템플릿 `PROJECT:AppEmbed`, 압축 **Disabled**(호스팅이 따로 압축), 예외 지원 없음, 코드 스트리핑 High, ASTC 텍스처, 스플래시 끔.
 4. 시작 씬은 `Main`, 이어서 시설 씬 6개와 층·복도·방 흐름 씬 7개가 등록됩니다.
 
-처음 빌드는 오래 걸립니다(코드가 바뀌면 약 20분 이상, 씬만 바뀌면 1분 이내).
+처음 빌드는 오래 걸립니다(코드가 바뀌면 약 25분, 씬만 바뀌면 1분 이내). 빠르게 시험할 때는 명령에 `-fast`를 붙이면 약 5분으로 줄지만 wasm 파일이 커집니다.
 
 ### 내 PC에서 3D만 열어 보기
 
@@ -174,7 +185,7 @@ dormitory-unity-3d/
 python tools/serve_nocache.py <WebGL 빌드 폴더> 8093
 ```
 
-브라우저에서 `http://127.0.0.1:8093/` 을 열면 Unity 단독으로 동작합니다. 앱 없이도 방 이동·위에서 보기·둘러보기를 확인할 수 있습니다.
+브라우저에서 `http://127.0.0.1:8093/` 을 열면 Unity 단독으로 동작합니다. 이 서버는 `127.0.0.1`에만 열려 **같은 PC에서만** 접속됩니다(휴대폰에서는 접속 불가). 앱 없이도 방 이동·위에서 보기·둘러보기를 확인할 수 있습니다.
 
 `serve_nocache.py`는 `python -m http.server`와 달리 **캐시를 끄고**(새 빌드와 옛 `index.html`이 섞여 "Unknown data format"이 나는 것을 막음), Windows에서 **같은 포트를 두 서버가 나눠 쓰지 못하게** 합니다.
 
@@ -190,4 +201,4 @@ python tools/serve_nocache.py <WebGL 빌드 폴더> 8093
 - `Assets/Resources/KoreanFont.ttf` (Noto Sans KR, SIL OFL)
 - Flutter 앱 코드(`lib/features/facility`) → 앱 저장소에 있습니다.
 
-전체 프로젝트를 열려면 위 폴더 구조대로 `src/`의 파일을 프로젝트의 `Assets/` 아래에 넣고 Unity **6000.3.22f1**로 여세요.
+전체 프로젝트에는 스크립트가 이미 들어 있으므로 그대로 Unity **6000.3.22f1**로 열면 됩니다. 이 저장소의 `src/`는 코드를 읽기 위한 사본이며 `.meta` 파일이 없습니다. 프로젝트에 반영할 때는 **같은 경로의 기존 `.cs` 파일 내용만 덮어쓰고** 프로젝트의 `.meta`는 그대로 두세요. (`.meta` 없이 새로 넣으면 씬·프리팹의 스크립트 연결이 끊길 수 있습니다.)

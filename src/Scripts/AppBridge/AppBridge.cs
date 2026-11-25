@@ -17,6 +17,7 @@ public class AppBridge : MonoBehaviour
 
     static AppBridge instance;
 
+    // stored for later: every floor still shows the same FloorView, so nothing reads this yet
     public static int CurrentFloor { get; private set; } = 1;
 
 #if UNITY_WEBGL && !UNITY_EDITOR

@@ -31,6 +31,8 @@ public static class AppUiFixes
 
     public static void Apply(Scene scene)
     {
+        // back on the map: forget where an earlier room visit came from, so a room opened from a Main card returns to Main
+        if (scene.name == MainScene) { RoomSession.returnScene = ""; RoomSession.roomLabel = ""; }
         ApplyFont();
         if (System.Array.IndexOf(ScenesWithoutBack, scene.name) >= 0 && Application.CanStreamedLevelBeLoaded(MainScene))
             CreateBackToMain();

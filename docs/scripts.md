@@ -77,6 +77,7 @@
 - **기능**: 방 이름과 "돌아갈 씬"을 씬 사이에 넘기는 정적 변수 두 개
 - **알고리즘**
   1. roomLabel("1인실"…) / returnScene: 씬을 바꾸기 전에 쓰고 다음 씬에서 읽음
+  2. Main 씬이 로드되면 AppUiFixes.Apply 가 두 값을 비움 → Main 카드로 들어간 방의 ← 는 Main 으로 돌아감
 - 참고: 데이터만 있는 static 클래스
 
 ### RoomEntryButtons.cs

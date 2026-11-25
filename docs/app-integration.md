@@ -22,7 +22,7 @@ Unity에서 메시지를 보낼 때: `AppBridge.Send("hotspot:laundry_3f");` (We
 | `Assets/Scripts/AppBridge/AppBridge.cs` | 씬과 상관없이 자동 생성(`DontDestroyOnLoad`). 앱 명령 처리 + `ready`/`room:` 전송 |
 | `Assets/Plugins/WebGL/AppBridge.jslib` | C# → 웹 페이지(`window.appSend`) |
 | `Assets/WebGLTemplates/AppEmbed/index.html` | 호스팅 페이지: Unity 로딩, `window.unityCommand`, 앱과 postMessage |
-| `Assets/Editor/WebGLBuild.cs` | WebGL 빌드(메뉴 `Tools > Dorm > Build WebGL (for app)`) — 7개 흐름 씬 등록, 템플릿/압축 설정 |
+| `Assets/Editor/WebGLBuild.cs` | WebGL 빌드(메뉴 `Tools > Dorm > Build WebGL (for app)`) — 씬 14개 등록(Main + 시설 6개 + 층·복도·방 흐름 7개), 템플릿/압축 설정 |
 | `Assets/Resources/KoreanFont.ttf` | Noto Sans KR(SIL OFL). WebGL은 OS 글꼴이 없어서 이 파일을 먼저 쓴다 |
 
 웹 ↔ 휴대폰 전달 방식 (페이지 안에서 자동으로 고름)
